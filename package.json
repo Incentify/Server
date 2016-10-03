@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Koa server for Incentify",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Incentify/server.git"
+  },
+  "author": "Jason Land",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Incentify/server/issues"
+  },
+  "homepage": "https://github.com/Incentify/server",
+  "devDependencies": {
+    "lodash": "^4.16.3"
+  },
+  "dependencies": {
+    "co-body": "^4.2.0",
+    "koa": "^1.2.4",
+    "koa-router": "^5.4.0",
+    "koa-static": "^2.0.0",
+    "rethinkdb": "^2.3.3"
+  }
+}
