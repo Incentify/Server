@@ -8,7 +8,6 @@ var config = require(__dirname+"/config.js");
 
 var r = require('rethinkdb');
 
-app.use(express.static(__dirname + '/public'));
 app.use(bodyParser());
 
 // Middleware that will create a connection to the database
