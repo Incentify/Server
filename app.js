@@ -1,123 +1,121 @@
-var koa = require('koa');
+// Import express
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 
-// Middleware and helpers
-var serve = require('koa-static');
-var parse = require('co-body');
-var router = require('koa-router');
-var http = require('http');
-
-// Import rethinkdb
-var r = require('rethinkdb');
-
-// Load config for RethinkDB and koa
+// Load config for RethinkDB and express
 var config = require(__dirname+"/config.js");
 
-var app = koa();
+var r = require('rethinkdb');
 
-// Static content
-app.use(serve(__dirname+'/public'));
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser());
 
-// Create a RethinkDB connection
+// Middleware that will create a connection to the database
 app.use(createConnection);
 
-app.use(router(app));
-app.get('/todo/get', get);
-app.put('/todo/new', create);
-app.post('/todo/update', update);
-app.post('/todo/delete', del);
+// Define main routes
+app.route('/todo/get').get(get);
+app.route('/todo/new').put(create);
+app.route('/todo/update').post(update);
+app.route('/todo/delete').post(del);
 
-// Close the RethinkDB connection
+// Middleware to close a connection to the database
 app.use(closeConnection);
+
+
+/*
+ * Retrieve all todos
+ */
+function get(req, res, next) {
+    r.table('todos').orderBy({index: "createdAt"}).run(req._rdbConn).then(function(cursor) {
+        return cursor.toArray();
+    }).then(function(result) {
+        res.send(JSON.stringify(result));
+    }).error(handleError(res))
+    .finally(next);
+}
+
+/*
+ * Insert a todo
+ */
+function create(req, res, next) {
+    var todo = req.body;
+    todo.createdAt = r.now(); // Set the field `createdAt` to the current time
+    r.table('todos').insert(todo, {returnChanges: true}).run(req._rdbConn).then(function(result) {
+        if (result.inserted !== 1) {
+            handleError(res, next)(new Error("Document was not inserted."));
+        }
+        else {
+            res.send(JSON.stringify(result.changes[0].new_val));
+        }
+    }).error(handleError(res))
+    .finally(next);
+}
+
+/*
+ * Update a todo
+ */
+function update(req, res, next) {
+    var todo = req.body;
+    if ((todo != null) && (todo.id != null)) {
+        r.table('todos').get(todo.id).update(todo, {returnChanges: true}).run(req._rdbConn).then(function(result) {
+            res.send(JSON.stringify(result.changes[0].new_val));
+        }).error(handleError(res))
+        .finally(next);
+    }
+    else {
+        handleError(res)(new Error("The todo must have a field `id`."));
+        next();
+    }
+}
+
+/*
+ * Delete a todo
+ */
+function del(req, res, next) {
+    var todo = req.body;
+    if ((todo != null) && (todo.id != null)) {
+        r.table('todos').get(todo.id).delete().run(req._rdbConn).then(function(result) {
+            res.send(JSON.stringify(result));
+        }).error(handleError(res))
+        .finally(next);
+    }
+    else {
+        handleError(res)(new Error("The todo must have a field `id`."));
+        next();
+    }
+}
+
+/*
+ * Send back a 500 error
+ */
+function handleError(res) {
+    return function(error) {
+        res.send(500, {error: error.message});
+    }
+}
 
 /*
  * Create a RethinkDB connection, and save it in req._rdbConn
  */
-function* createConnection(next) {
-    try{
-        var conn = yield r.connect(config.rethinkdb);
-        this._rdbConn = conn;
-    }
-    catch(err) {
-        this.status = 500;
-        this.body = err.message || http.STATUS_CODES[this.status];
-    }
-    yield next;
-}
-
-// Retrieve all todos
-function* get(next) {
-    try{
-        var cursor = yield r.table('todos').orderBy({index: "createdAt"}).run(this._rdbConn);
-        var result = yield cursor.toArray();
-        this.body = JSON.stringify(result);
-    }
-    catch(e) {
-        this.status = 500;
-        this.body = e.message || http.STATUS_CODES[this.status];
-    }
-    yield next;
-}
-
-// Create a new todo
-function* create(next) {
-    try{
-        var todo = yield parse(this);
-        todo.createdAt = r.now(); // Set the field `createdAt` to the current time
-        var result = yield r.table('todos').insert(todo, {returnChanges: true}).run(this._rdbConn);
-
-        todo = result.changes[0].new_val; // todo now contains the previous todo + a field `id` and `createdAt`
-        this.body = JSON.stringify(todo);
-    }
-    catch(e) {
-        this.status = 500;
-        this.body = e.message || http.STATUS_CODES[this.status];
-    }
-    yield next;
-}
-
-// Update a todo
-function* update(next) {
-    try{
-        var todo = yield parse(this);
-        delete todo._saving;
-        if ((todo == null) || (todo.id == null)) {
-            throw new Error("The todo must have a field `id`.");
-        }
-
-        var result = yield r.table('todos').get(todo.id).update(todo, {returnChanges: true}).run(this._rdbConn);
-        this.body = JSON.stringify(result.changes[0].new_val);
-    }
-    catch(e) {
-        this.status = 500;
-        this.body = e.message || http.STATUS_CODES[this.status];
-    }
-    yield next;
-}
-
-// Delete a todo
-function* del(next) {
-    try{
-        var todo = yield parse(this);
-        if ((todo == null) || (todo.id == null)) {
-            throw new Error("The todo must have a field `id`.");
-        }
-        var result = yield r.table('todos').get(todo.id).delete().run(this._rdbConn);
-        this.body = "";
-    }
-    catch(e) {
-        this.status = 500;
-        this.body = e.message || http.STATUS_CODES[this.status];
-    }
-    yield next;
+function createConnection(req, res, next) {
+    r.connect(config.rethinkdb).then(function(conn) {
+        req._rdbConn = conn;
+        next();
+    }).error(handleError(res));
 }
 
 /*
  * Close the RethinkDB connection
  */
-function* closeConnection(next) {
-    this._rdbConn.close();
+function closeConnection(req, res, next) {
+    req._rdbConn.close();
 }
 
+/*
+ * Create tables/indexes then start express
+ */
 r.connect(config.rethinkdb, function(err, conn) {
     if (err) {
         console.log("Could not open a connection to initialize the database");
@@ -126,8 +124,8 @@ r.connect(config.rethinkdb, function(err, conn) {
     }
 
     r.table('todos').indexWait('createdAt').run(conn).then(function(err, result) {
-        console.log("Table and index are available, starting koa...");
-        startKoa();
+        console.log("Table and index are available, starting express...");
+        startExpress();
     }).error(function(err) {
         // The database/table/index was not available, create them
         r.dbCreate(config.rethinkdb.db).run(conn).finally(function() {
@@ -137,8 +135,8 @@ r.connect(config.rethinkdb, function(err, conn) {
         }).finally(function(result) {
             r.table('todos').indexWait('createdAt').run(conn)
         }).then(function(result) {
-            console.log("Table and index are available, starting koa...");
-            startKoa();
+            console.log("Table and index are available, starting express...");
+            startExpress();
             conn.close();
         }).error(function(err) {
             if (err) {
@@ -146,15 +144,14 @@ r.connect(config.rethinkdb, function(err, conn) {
                 console.log(err);
                 process.exit(1);
             }
-            console.log("Table and index are available, starting koa...");
-            startKoa();
+            console.log("Table and index are available, starting express...");
+            startExpress();
             conn.close();
         });
     });
 });
 
-
-function startKoa() {
-    app.listen(config.koa.port);
-    console.log('Listening on port '+config.koa.port);
+function startExpress() {
+    app.listen(config.express.port);
+    console.log('Listening on port '+config.express.port);
 }

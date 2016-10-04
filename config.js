@@ -7,7 +7,7 @@ module.exports = {
         authKey: "",
         db: "rethinkdb_ex"
     },
-    koa: {
-        port: 80
+    express: {
+        port: 3000
     }
 }
