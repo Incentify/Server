@@ -1,7 +1,8 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Koa server for Incentify",
+  "description": "Express server for Incentify",
+  "private": true,
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -21,8 +22,16 @@
     "lodash": "^4.16.3"
   },
   "dependencies": {
+    "bcrypt": "^0.8.7",
+    "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "dotenv": "^2.0.0",
     "express": "^4.14.0",
+    "helmet": "^2.3.0",
+    "jwt-simple": "^0.5.0",
+    "moment": "^2.15.1",
+    "morgan": "^1.7.0",
     "rethinkdb": "^2.3.3"
   }
 }
