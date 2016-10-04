@@ -8,7 +8,7 @@ require('dotenv').load();
 
 // endpoints for database tables
 var users = require('./routes/users');
-var login = require('./routes/login');
+// var login = require('./routes/login');
 
 var app = express();
 
@@ -20,7 +20,7 @@ app.use(helmet());
 
 // telling Express to use our routes
 app.use('/users', users);
-app.use('/login', login);
+// app.use('/login', login);
 
 // sets error message for 500 status
 app.use(function (error, request, response, next) {
