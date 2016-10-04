@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/Incentify/server",
   "devDependencies": {
-    "lodash": "^4.16.3"
+    "lodash": "^4.16.3",
+    "nodemon": "^1.10.2"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
