@@ -3,14 +3,16 @@ var rdb = require('../lib/rethink');
 var auth = require('../lib/auth');
 var router = express.Router();
 
-router.get('/', auth.authorize, function (request, response) {
+// router.get('/', auth.authorize, function (request, response) {
+router.get('/', function (request, response) {
     rdb.findAll('users')
     .then(function (users) {
         response.json(users);
     });
 });
 
-router.get('/:id', auth.authorize, function (request, response, next) {
+// router.get('/:id', auth.authorize, function (request, response, next) {
+router.get('/:id', function (request, response, next) {
     rdb.find('users', request.params.id)
     .then(function (user) {
         if(!user) {
@@ -23,7 +25,7 @@ router.get('/:id', auth.authorize, function (request, response, next) {
     });
 });
 
-router.post('/', auth.authorize, function (request, response) {
+router.post('/', function (request, response) {
     auth.hash_password(request.body.password)
     .then(function (hash) {
         var newUser = {
@@ -54,6 +56,7 @@ router.put('/:id', auth.authorize, function (request, response) {
     });
 });
 
+// do we allow users to delete accounts or not?
 router.delete('/:id', auth.authorize, function (request, response) {
     rdb.destroy('users', request.params.id)
     .then(function (results) {
