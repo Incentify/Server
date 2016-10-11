@@ -1,0 +1,50 @@
+"users": [
+  {
+    "name": "Jason Land",
+    "email": "wishinghand@gmail.com",
+    "password_hash": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
+    "fb_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
+    "twitter_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
+    "zip_code": "92103",
+    "age": 31,
+    "commitments": [
+      {
+        "service_name": "Team Treehouse",
+        "api_key": "",
+        "username": "jasonland2",
+        "current_points": "{{history[].length -1}}",
+        "starting_points": "4309",
+        "point_history": [{
+          "timestamp": "",
+          "value": "4444"
+        }],
+        "weekly_goal": "100",
+        "penalty": "500",
+        "stripe_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a"
+      }
+    ]
+  }
+]
+
+"payments": [
+  {
+    "date": "date()",
+    "amount": 500,
+    "stripe_charge": {
+      "id":,
+      "token":
+    }
+  }
+]
+
+"integrations": [
+   {
+      "name": "Team Treehouse",
+      "short_name": "Treehouse",
+      "description": "Treehouse brings affordable technology education to people everywhere in order to help them achieve their dreams and change the world.",
+      "baseURL": "https://teamtreehouse.com",
+      "profileURL": "https://teamtreehouse.com/jasonland2.json",
+      "logoURL": "assets/treehouse_logo.png",
+      "point_minimum": 500
+   }
+]

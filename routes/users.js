@@ -1,6 +1,7 @@
 var express = require('express');
 var rdb = require('../lib/rethink');
 var auth = require('../lib/auth');
+var passport = require ('passport');
 var router = express.Router();
 
 // router.get('/', auth.authorize, function (request, response) {
@@ -41,8 +42,8 @@ router.post('/', function (request, response) {
     });
 });
 
-router.put('/:id', auth.authorize, function (request, response) {
-    rdb.find('users', request.params.id)
+router.put('/:id', passport.authenticate('jwt', { session: false }), function (request, response) {
+    rdb.find('users', request.user.id)
     .then(function (user) {
         var updateUser = {
             name: request.body.user || user.name,
@@ -57,7 +58,7 @@ router.put('/:id', auth.authorize, function (request, response) {
 });
 
 // do we allow users to delete accounts or not?
-router.delete('/:id', auth.authorize, function (request, response) {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), function (request, response) {
     rdb.destroy('users', request.params.id)
     .then(function (results) {
         response.json(results);
