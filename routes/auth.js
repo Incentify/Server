@@ -5,11 +5,10 @@ var token = require('../lib/token');
 
 var router = express.Router();
 
-module.exports = function(passport) {
+// module.exports = function(passport) {
   router.post('/login',
     function(req, res) {
-      rdb
-        .findBy('users', 'email', req.body.email)
+      rdb.findBy('users', 'email', req.body.email)
         .then(
           function(users) {
             switch (users.length) {
@@ -54,12 +53,16 @@ module.exports = function(passport) {
         return next(err);
       }
 
+      //query to see if req.body.email already exists
+      var email = rdb.findBy('users', 'email', req.body.email);
+      console.log(email);
+
       // make sure email isn't already in database
-      // if (req.body.email ) {
-      //     var err = new Error('That email is already taken');
-      //     err.status = 400;
-      //     return next(err);
-      // }
+      if (req.body.email === email) {
+          var err = new Error('That email is already taken');
+          err.status = 400;
+          return next(err);
+      }
 
       // hash the password
       auth.hash_password(req.body.password)
@@ -85,6 +88,6 @@ module.exports = function(passport) {
       return next(err);
     }
   })
-}
+// }
 
 module.exports = router;

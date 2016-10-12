@@ -2,6 +2,7 @@ var express = require('express');
 var rdb = require('../lib/rethink');
 var auth = require('../lib/auth');
 var passport = require ('passport');
+
 var router = express.Router();
 
 // router.get('/', auth.authorize, function (request, response) {
@@ -30,7 +31,6 @@ router.post('/', function (request, response) {
     auth.hash_password(request.body.password)
     .then(function (hash) {
         var newUser = {
-            name: request.body.name,
             email: request.body.email,
             password: hash
         };
