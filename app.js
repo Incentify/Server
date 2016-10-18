@@ -11,7 +11,7 @@ require('dotenv').load();
 // endpoints for database tables
 var users = require('./routes/users');
 var auth = require('./routes/auth');
-
+var integrations = require('./routes/integrations');
 var app = express();
 
 app.use(cors());
@@ -27,6 +27,7 @@ initPassport(passport);
 // telling Express to use our routes
 app.use('/users', users);
 app.use('/auth', auth);
+app.use('/integrations', integrations);
 
 // sets error message for 500 status
 app.use(function (error, request, response, next) {
