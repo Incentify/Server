@@ -42,12 +42,15 @@ router.post('/', function (request, response) {
     });
 });
 
-router.put('/:id', passport.authenticate('jwt', { session: false }), function (request, response) {
-    rdb.find('users', request.user.id)
+router.put('/', passport.authenticate('jwt', { session: false }), function (request, response) {
+    rdb.findBy('users', 'id', request.user.id)
     .then(function (user) {
+
+        // add new password validiation
+        // add unique email validation
         var updateUser = {
-            name: request.body.user || user.name,
-            email: request.body.email || user.email
+            email: request.body.email || user.email,
+            password: request.body.password || user.password
         };
 
         rdb.edit('user', user.id, updateUser)
@@ -58,11 +61,11 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), function (r
 });
 
 // do we allow users to delete accounts or not?
-router.delete('/:id', passport.authenticate('jwt', { session: false }), function (request, response) {
-    rdb.destroy('users', request.params.id)
-    .then(function (results) {
-        response.json(results);
-    });
-});
+// router.delete('/:id', passport.authenticate('jwt', { session: false }), function (request, response) {
+//     rdb.destroy('users', request.params.id)
+//     .then(function (results) {
+//         response.json(results);
+//     });
+// });
 
 module.exports = router;

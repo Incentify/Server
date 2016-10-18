@@ -12,7 +12,7 @@ router.post('/login',
         function(users) {
           switch (users.length) {
             case 0:
-              return res.send(400); // couldn't find a email
+              return res.send(400); // couldn't find an email
             case 1:
               auth.authenticate(req.body.password, users[0].password).then(
                 function(user) {
@@ -20,7 +20,7 @@ router.post('/login',
                   var token = token.generate(users[0]);
 
                   res.send({
-                    access_token: token,
+                    token: token,
                     email: user.email
                   });
                 }
@@ -71,9 +71,12 @@ router.post('/register', function(req, res, next) {
 
         rdb.save('users', userData)
           .then(function(user) {
+            var jwtToken = token.generate(user);
             res.json({
               success: true,
-              message: 'User successfully created'
+              message: 'User successfully created',
+              // send token here
+              token: jwtToken
             })
           });
       })
