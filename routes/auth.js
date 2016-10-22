@@ -17,10 +17,10 @@ router.post('/login',
               auth.authenticate(req.body.password, users[0].password).then(
                 function(user) {
                   // generate the token
-                  var token = token.generate(users[0]);
+                  var accessToken = token.generate(users[0]);
 
                   res.send({
-                    token: token,
+                    token: accessToken,
                     email: user.email
                   });
                 }
@@ -34,6 +34,7 @@ router.post('/login',
       )
       .catch(
         function(error) {
+          return res.send(500);
           done(error, null);
         }
       );
