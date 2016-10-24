@@ -12,6 +12,8 @@ require('dotenv').load();
 var users = require('./routes/users');
 var auth = require('./routes/auth');
 var integrations = require('./routes/integrations');
+var commitments = require('./routes/commitments');
+
 var app = express();
 
 app.use(cors());
@@ -28,6 +30,7 @@ initPassport(passport);
 app.use('/users', users);
 app.use('/auth', auth);
 app.use('/integrations', integrations);
+app.use('/commitments', commitments);
 
 // sets error message for 500 status
 app.use(function (error, request, response, next) {
