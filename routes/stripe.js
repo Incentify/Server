@@ -1,11 +1,15 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var stripe = require('stripe')('sk_test_n8RGb6GbjIx5km3OkFHzbT4V');
+var express = require('express');
+var rdb = require('../lib/rethink');
+var auth = require('../lib/auth');
+var passport = require ('passport');
 
-var app = express();
-app.use(bodyParser());
 
-app.post('/charge', function(req, res) {
+var router = express.Router();
+
+router.post('/charge', function(req, res) {
     var stripeToken = req.body.stripeToken;
     var amount = 1000;
     stripe.charges.create({
@@ -22,5 +26,4 @@ app.post('/charge', function(req, res) {
     });
 });
 
-app.use(express.static(__dirname));
-app.listen(process.env.PORT || 3000);
+module.exports = router;

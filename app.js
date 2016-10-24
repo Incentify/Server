@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var auth = require('./routes/auth');
 var integrations = require('./routes/integrations');
 var commitments = require('./routes/commitments');
+var stripe = require('./routes/stripe');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/users', users);
 app.use('/auth', auth);
 app.use('/integrations', integrations);
 app.use('/commitments', commitments);
+app.use('/stripe', stripe);
 
 // sets error message for 500 status
 app.use(function (error, request, response, next) {
