@@ -38,6 +38,6 @@
     "passport-jwt": "^2.1.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "rethinkdb": "^2.3.3",
+    "rethinkdb": "^2.3.3"
   }
 }
