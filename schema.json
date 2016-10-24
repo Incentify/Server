@@ -1,24 +1,26 @@
 "users": [
   {
     "email": "wishinghand@gmail.com",
+    "id": "3d3853b8-ddb8-44ef-a5f9-0a6a515f6122",
     "password": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
     "commitments": [
       {
         "service_name": "Team Treehouse",
         "username": "jasonland2",
+        "stripe_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
         "point_history": [{
-          "timestamp": "",
+          "timestamp": "2016-09-08 09:30:26",
           "value": "4444"
         }],
         "goal_history": [{
-          "start_date": "",
-          "end_date": "",
+          "start_date": "2016-10-19 09:30:26",
+          "end_date": "2016-10-26 09:30:26",
           "starting_points": 5000,
           "goal_amount": 50,
           "goal_total": 5050,
           "penalty": 500,
-        }],
-        "stripe_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a"
+          "renewable": true
+        }]
       }
     ]
   }
@@ -40,7 +42,8 @@
       "name": "Team Treehouse",
       "short_name": "Treehouse",
       "description": "Treehouse brings affordable technology education to people everywhere in order to help them achieve their dreams and change the world.",
-      "baseURL": "https://teamtreehouse.com",
+      // "baseURL": "https://teamtreehouse.com",
+      "baseURL": "https://teamtreehouse.com/XXX.json",
       "logoURL": "assets/treehouse_logo.png",
       "point_minimum": 400
    },
@@ -48,7 +51,8 @@
       "name": "Duolingo",
       "short_name": "Duolingo",
       "description": "Learning with Duolingo is fun and addictive. Earn points for correct answers, race against the clock, and level up. Our bite-sized lessons are effective, and we have proof that it works.",
-      "baseURL": "https://duolingo.com",
+      // "baseURL": "https://duolingo.com",
+      "baseURL": "https://www.duolingo.com/users/XXX",
       "logoURL": "assets/duolingo-logo.png",
       "point_minimum": 20
    }
