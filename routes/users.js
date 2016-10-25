@@ -1,66 +1,51 @@
 var express = require('express');
 var rdb = require('../lib/rethink');
 var auth = require('../lib/auth');
+var passport = require('passport');
+
 var router = express.Router();
 
-// router.get('/', auth.authorize, function (request, response) {
-router.get('/', function (request, response) {
-    rdb.findAll('users')
-    .then(function (users) {
-        response.json(users);
+router.get('/', passport.authenticate('jwt', { session: false }), function(request, response) {
+  console.log("user ID")
+  console.log(request.user.id)
+      rdb.findBy('users', 'id', request.user.id)
+        .then(function(users) {
+            response.json(
+              users.map(function(u) { return {email: u.email, id: u.id} })
+            );
+        });
     });
-});
 
-// router.get('/:id', auth.authorize, function (request, response, next) {
-router.get('/:id', function (request, response, next) {
-    rdb.find('users', request.params.id)
-    .then(function (user) {
-        if(!user) {
-            var notFoundError = new Error('User not found');
-            notFoundError.status = 404;
-            return next(notFoundError);
-        }
+router.post('/', function(request, response) {
+  auth.hash_password(request.body.password)
+    .then(function(hash) {
+      var newUser = {
+        email: request.body.email,
+        password: hash
+      };
 
-        response.json(user);
-    });
-});
-
-router.post('/', function (request, response) {
-    auth.hash_password(request.body.password)
-    .then(function (hash) {
-        var newUser = {
-            name: request.body.name,
-            email: request.body.email,
-            password: hash
-        };
-
-        rdb.save('users', newUser)
-        .then(function (result) {
-            response.json(result);
+      rdb.save('users', newUser)
+        .then(function(result) {
+          response.json(result);
         });
     });
 });
 
-router.put('/:id', auth.authorize, function (request, response) {
-    rdb.find('users', request.params.id)
-    .then(function (user) {
-        var updateUser = {
-            name: request.body.user || user.name,
-            email: request.body.email || user.email
-        };
+router.put('/', passport.authenticate('jwt', { session: false }), function(request, response) {
+  console.log(request.user);
+  rdb.find('users', request.user.id)
+    .then(function(user) {
+      // add new password validiation
+      // add unique email validation
+      var updateUser = {
+        email: request.body.email || user.email,
+        password: request.body.password || user.password
+      };
 
-        rdb.edit('user', user.id, updateUser)
-        .then(function (results) {
-            response.json(results);
+      rdb.edit('users', user.id, updateUser)
+        .then(function(results) {
+          response.json(results);
         });
-    });
-});
-
-// do we allow users to delete accounts or not?
-router.delete('/:id', auth.authorize, function (request, response) {
-    rdb.destroy('users', request.params.id)
-    .then(function (results) {
-        response.json(results);
     });
 });
 
