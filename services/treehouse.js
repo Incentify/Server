@@ -1,13 +1,14 @@
-const bluebird = require('bluebird');
+const Promise = require('bluebird');
+const request = require('request');
 
 module.exports.getUser = function(username) {
-  return new Promise(function(resolve, reject) {
-    express.get('https://teamtreehouse.com/' + username + '.json', function(req, res) {
-      if (res.body) {
-        resolve(res.body);
-      } else {
-        reject();
-      }
+    return new Promise(function(resolve, reject) {
+        request('https://teamtreehouse.com/' + username + '.json', function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                resolve(JSON.parse(body));
+            } else {
+            	reject()
+            }
+        });
     });
-  });
 }
