@@ -15,7 +15,6 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
             // check if commitments has a commitment by that name
             if (user.commitments && user.commitments.length) {
                 for (var i = 0; i < user.commitments.length; i++) {
-                    console.log(user);
 
                     if (user.commitments[i].service_name === "treehouse" && user.commitments[i].active) {
                         return response.send(400).json("Cannot add a goal for an existing commitment.")
@@ -28,12 +27,9 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
             treehouse.getUser(request.body.username)
                 .then(createCommitmentForTreehouseUser(request))
                 .then(function resolveResults(results) {
-                    console.log('resolve');
-                    console.log('returning to caller');
                     response.json(results);
                 })
                 .catch(function(error) {
-                    console.error(error);
                     response.status(500).send(error);
                 });
         });
@@ -101,7 +97,6 @@ function createCommitmentForTreehouseUser(request) {
             }]
         };
 
-        console.log('trying to append');
         return rdb.append('users', request.user.id, 'commitments', newCommitment);
     }
 }
