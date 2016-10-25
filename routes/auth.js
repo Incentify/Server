@@ -67,7 +67,8 @@ router.post('/register', function(req, res, next) {
         // create object with form input
         var userData = {
           email: req.body.email,
-          password: hash
+          password: hash,
+          commitments: []
         };
 
         rdb.save('users', userData)

@@ -6,6 +6,8 @@ var passport = require('passport');
 var router = express.Router();
 
 router.get('/', passport.authenticate('jwt', { session: false }), function(request, response) {
+  console.log("user ID")
+  console.log(request.user.id)
       rdb.findBy('users', 'id', request.user.id)
         .then(function(users) {
             response.json(

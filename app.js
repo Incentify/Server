@@ -37,6 +37,7 @@ app.use('/stripe', stripe);
 // sets error message for 500 status
 app.use(function (error, request, response, next) {
     response.status(error.status || 500);
+    // console.log(error.stack)
     response.json({ error: error.message });
 });
 
