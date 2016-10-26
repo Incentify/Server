@@ -3,23 +3,24 @@ var rdb = require('../lib/rethink');
 var auth = require('../lib/auth');
 var passport = require('passport');
 var treehouse = require('../services/treehouse');
+var moment = require('moment');
 
 var router = express.Router();
 
 router.get('/', passport.authenticate('jwt', { session: false }), function(request, response) {
       rdb.findBy('users', 'id', request.user.id)
         .then(function(users) {
-          console.log(users)
+          console.log(users);
             response.json(
               users.map(function(u) { return {
                 email: u.email,
                 id: u.id,
                 username: u.commitments[0].username,
-                
+
                 goal_amount: u.commitments[0].goal_history[0].goal_amount,
-                
+
                 starting_points: u.commitments[0].goal_history[0].starting_point,
-                
+
                 value: u.commitments[0].point_history[0].value
               }})
             );
@@ -64,8 +65,12 @@ router.put('/update', passport.authenticate('jwt', { session: false }), function
       //get new points
       treehouse.getUser(user.commitments[0].username).then(function (points) {
         //append those points
-        console.log(points.points.total);
-        rdb.appendPoints('users', user.id, points.points.total);
+        var now = moment().format();
+        var pointUpdate = {
+          timestamp: now,
+          value: points.points.total
+        }
+        rdb.appendPoints('users', user.id, pointUpdate);
       })
     });
 });

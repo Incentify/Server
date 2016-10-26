@@ -36,39 +36,39 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
 });
 
 // user adds new DUOLINGO commitment
-router.put('/duolingo', passport.authenticate('jwt', { session: false }), function(request, response) {
-    rdb.find('users', request.user.id)
-        .then(function(user) {
+// router.put('/duolingo', passport.authenticate('jwt', { session: false }), function(request, response) {
+//     rdb.find('users', request.user.id)
+//         .then(function(user) {
 
-            // check if commitments has a commitment by that name
-            for (var i = 0; i < user.length - 1; i++) {
-                if (user[0].commitments[i].service_name === request.body.goal.integrationName) {
-                    var message = "cannot add a goal for an existing commitment";
-                    return message;
-                }
-            }
+//             // check if commitments has a commitment by that name
+//             for (var i = 0; i < user.length - 1; i++) {
+//                 if (user[0].commitments[i].service_name === request.body.goal.integrationName) {
+//                     var message = "cannot add a goal for an existing commitment";
+//                     return message;
+//                 }
+//             }
 
-            //check if username exists
-            // if yes, get their current total points
+//             //check if username exists
+//             // if yes, get their current total points
 
 
-            // Create timestamp; use 168 hours to account for daylight savings
-            var now = moment().format();
-            var oneWeekLater = now.add(168, 'hours');
+//             // Create timestamp; use 168 hours to account for daylight savings
+//             var now = moment().format();
+//             var oneWeekLater = now.add(168, 'hours');
 
-            // commitment object
-            var updateUser = {
-                service_name: request.body.goal.integrationName,
-                username: request.body.goal.username,
-                stripe_token: null
-            };
+//             // commitment object
+//             var updateUser = {
+//                 service_name: request.body.goal.integrationName,
+//                 username: request.body.goal.username,
+//                 stripe_token: null
+//             };
 
-            rdb.append('users', user.id, updateUser)
-                .then(function(results) {
-                    response.json(results);
-                });
-        });
-});
+//             rdb.append('users', user.id, updateUser)
+//                 .then(function(results) {
+//                     response.json(results);
+//                 });
+//         });
+// });
 
 ///////////////////
 
