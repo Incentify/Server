@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var dotenv = require('dotenv');
 var bodyParser = require('body-parser');
+var rdb = require('../lib/rethink');
 
 dotenv.load(); //get configuration file from .env
 
@@ -9,7 +10,7 @@ var router = express.Router();
 
 router.use(bodyParser.json());
 
-var stripe = require("stripe")(process.env.sk_test_n8RGb6GbjIx5km3OkFHzbT4V);
+var stripe = require("stripe")(process.env.stripe_key);
 
 router.get('/', function(req, res) {
     res.sendFile(__dirname +'index.html');

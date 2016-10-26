@@ -4,28 +4,37 @@ var auth = require('../lib/auth');
 var passport = require('passport');
 var treehouse = require('../services/treehouse');
 var moment = require('moment');
+var _ = require('lodash');
 
 var router = express.Router();
 
 router.get('/', passport.authenticate('jwt', { session: false }), function(request, response) {
-      rdb.findBy('users', 'id', request.user.id)
-        .then(function(users) {
-          console.log(users);
-            response.json(
-              users.map(function(u) { return {
+  console.log("getting users");
+  rdb.findBy('users', 'id', request.user.id)
+    .then(function(users) {
+        console.log(users);
+        response.json(
+          users.map(function(u) {
+              var base = {
                 email: u.email,
-                id: u.id,
-                username: u.commitments[0].username,
+                id: u.id
+              };
 
-                goal_amount: u.commitments[0].goal_history[0].goal_amount,
+            if (u.commitments && u.commitments.length > 0) {
+              console.log(u.commitments);
+                base = _.merge(base, {
+                  username: u.commitments[0].username,
+                  goal_amount: u.commitments[0].goal_history[0].goal_amount,
+                  starting_points: u.commitments[0].goal_history[0].starting_point,
+                  value: u.commitments[0].point_history[0].value
+                })
+              }
 
-                starting_points: u.commitments[0].goal_history[0].starting_point,
-
-                value: u.commitments[0].point_history[0].value
-              }})
-            );
-        });
+              return base;
+          })
+      );
     });
+});
 
 router.post('/', function(request, response) {
   auth.hash_password(request.body.password)
@@ -60,18 +69,26 @@ router.put('/', passport.authenticate('jwt', { session: false }), function(reque
 });
 
 router.put('/update', passport.authenticate('jwt', { session: false }), function(request, response) {
+  console.log("updating started");
   rdb.find('users', request.user.id)
     .then(function(user) {
+      console.log(user);
       //get new points
-      treehouse.getUser(user.commitments[0].username).then(function (points) {
-        //append those points
-        var now = moment().format();
-        var pointUpdate = {
-          timestamp: now,
-          value: points.points.total
-        }
-        rdb.appendPoints('users', user.id, pointUpdate);
-      })
+      var userHasTeamTreehouseCommitment = _.some(user.commitments, function(c) {
+        return c.service_name === 'Team Treehouse';
+      });
+      if(user.commitments.length > 0 && userHasTeamTreehouseCommitment) {
+        treehouse.getUser(user.commitments[0].username).then(function(points) {
+          console.log("user got");
+          //append those points
+          var now = moment().format();
+          var pointUpdate = {
+            timestamp: now,
+            value: points.points.total
+          }
+          rdb.appendPoints('users', user.id, pointUpdate);
+        })
+      }
     });
 });
 

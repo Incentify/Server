@@ -1,23 +1,23 @@
 "users": [
   {
     "email": "wishinghand@gmail.com",
-    "id": "3d3853b8-ddb8-44ef-a5f9-0a6a515f6122",
+    "id": "3d3854b0-ddb8-44ef-a5f9-0a6a515f6122",
     "password": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
     "commitments": [
       {
         "service_name": "Team Treehouse",
         "username": "jasonland2",
-        "stripe_token": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
+        "stripe_token": null,
+        "active": true,
         "point_history": [{
-          "timestamp": "2016-09-08 09:30:26",
-          "value": "4444"
+          "timestamp": "Wed Oct 26 2016 17:27:46 GMT+00:00",
+          "value": 5010
         }],
         "goal_history": [{
-          "start_date": "2016-10-19 09:30:26",
-          "end_date": "2016-10-26 09:30:26",
+          "start_date": "Wed Oct 26 2016 17:27:46 GMT+00:00",
+          "end_date": "Wed Nov 02 2016 17:27:46 GMT+00:00",
           "starting_points": 5000,
-          "goal_amount": 50,
-          "goal_total": 5050,
+          "goal_amount": 100,
           "penalty": 500,
           "renewable": true
         }]

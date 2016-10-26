@@ -53,35 +53,37 @@ router.post('/register', function(req, res, next) {
     }
 
     //query to see if req.body.email already exists
-    rdb.findBy('users', 'email', req.body.email).then(function(result){
+    rdb.findBy('users', 'email', req.body.email).then(function(result) {
       // make sure email isn't already in database
       if (result.length) {
-          var err = new Error('That email is already taken');
-          err.status = 400;
-          return next(err);
+        var err = new Error('That email is already taken');
+        err.status = 400;
+        return next(err);
       }
 
-    // hash the password
-    auth.hash_password(req.body.password)
-      .then(function(hash) {
-        // create object with form input
-        var userData = {
-          email: req.body.email,
-          password: hash,
-          commitments: []
-        };
+      // hash the password
+      auth.hash_password(req.body.password)
+        .then(function(hash) {
+          // create object with form input
+          var userData = {
+            email: req.body.email,
+            password: hash,
+            commitments: []
+          };
 
-        rdb.save('users', userData)
-          .then(function(user) {
-            var jwtToken = token.generate(user);
-            res.json({
-              success: true,
-              message: 'User successfully created',
-              // send token here
-              token: jwtToken
-            })
-          });
-      })
+          rdb.save('users', userData)
+            .then(function(result) {
+              rdb.findBy('users', 'email', req.body.email).then(function(users) {
+                var jwtToken = token.generate(users[0]);
+
+                res.send({
+                  success: true,
+                  message: 'User successfully created',
+                  token: jwtToken
+                })
+              });
+            });
+        })
 
     });
   } else {
