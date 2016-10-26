@@ -12,7 +12,7 @@ router.post('/login',
         function(users) {
           switch (users.length) {
             case 0:
-              return res.send(400); // couldn't find an email
+              return res.sendStatus(400); // couldn't find an email
             case 1:
               auth.authenticate(req.body.password, users[0].password).then(
                 function(user) {

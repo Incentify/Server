@@ -17,7 +17,7 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
                 for (var i = 0; i < user.commitments.length; i++) {
 
                     if (user.commitments[i].service_name === "treehouse" && user.commitments[i].active) {
-                        return response.send(400).json("Cannot add a goal for an existing commitment.")
+                        return response.sendStatus(400).json("Cannot add a goal for an existing commitment.")
                     }
                 }
             }
@@ -76,7 +76,7 @@ function createCommitmentForTreehouseUser(request) {
     return function(teamTreehouseUser) {
         // Create timestamp; use 168 hours to account for daylight savings
         var now = moment();
-        var oneWeekLater = now.add(168, 'hours');
+        var oneWeekLater = moment().add(168, 'hours');
 
         var newCommitment = {
             service_name: "treehouse",
@@ -91,13 +91,13 @@ function createCommitmentForTreehouseUser(request) {
                 start_date: now.toDate(),
                 end_date: oneWeekLater.toDate(),
                 starting_points: teamTreehouseUser.points.total,
-                goal_amount: request.body.pointGoal,
+                goal_amount: parseInt(request.body.pointGoal),
                 penalty: request.body.amount * 100,
                 renewable: true
             }]
         };
 
-        return rdb.append('users', request.user.id, 'commitments', newCommitment);
+        return rdb.appendCommitment('users', request.user.id, 'commitments', newCommitment);
     }
 }
 
