@@ -32,7 +32,6 @@ router.post('/process_payment', function(req, res) {
             res.json({"status":"failure", "reason":"card was declined"});
         }
         else{
-            console.log(charge);
             res.json({"status":"success"});
         }
     });
