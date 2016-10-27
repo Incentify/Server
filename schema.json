@@ -5,7 +5,7 @@
     "password": "asdlkfja98sd8asf89aw4hr2ioroi2n3rh203rno23rnoanfsd0a",
     "commitments": [
       {
-        "service_name": "Team Treehouse",
+        "service_name": "treehouse",
         "username": "jasonland2",
         "stripe_token": null,
         "active": true,

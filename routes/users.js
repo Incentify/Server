@@ -9,10 +9,8 @@ var _ = require('lodash');
 var router = express.Router();
 
 router.get('/', passport.authenticate('jwt', { session: false }), function(request, response) {
-  console.log("getting users");
   rdb.findBy('users', 'id', request.user.id)
     .then(function(users) {
-        console.log(users);
         response.json(
           users.map(function(u) {
               var base = {
@@ -21,7 +19,6 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(reque
               };
 
             if (u.commitments && u.commitments.length > 0) {
-              console.log(u.commitments);
                 base = _.merge(base, {
                   username: u.commitments[0].username,
                   goal_amount: u.commitments[0].goal_history[0].goal_amount,
@@ -69,17 +66,15 @@ router.put('/', passport.authenticate('jwt', { session: false }), function(reque
 });
 
 router.put('/update', passport.authenticate('jwt', { session: false }), function(request, response) {
-  console.log("updating started");
   rdb.find('users', request.user.id)
     .then(function(user) {
-      console.log(user);
       //get new points
       var userHasTeamTreehouseCommitment = _.some(user.commitments, function(c) {
-        return c.service_name === 'Team Treehouse';
+        return c.service_name === 'treehouse';
       });
       if(user.commitments.length > 0 && userHasTeamTreehouseCommitment) {
         treehouse.getUser(user.commitments[0].username).then(function(points) {
-          console.log("user got");
+          console.log("milestone 5");
           //append those points
           var now = moment().format();
           var pointUpdate = {

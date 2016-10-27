@@ -10,18 +10,16 @@ var router = express.Router();
 
 // user adds new TREEHOUSE commitment
 router.post('/treehouse', passport.authenticate('jwt', { session: false }), function(request, response) {
-    console.log('initial post');
-    console.log('AHHHHH');
-    console.log(request.user);
+
     rdb.find('users', request.user.id)
         .then(function(user) {
-            console.log(user);
+
             // check if commitments has a commitment by that name
             if (user.commitments && user.commitments.length) {
                 for (var i = 0; i < user.commitments.length; i++) {
 
                     if (user.commitments[i].service_name === "treehouse" && user.commitments[i].active) {
-                        console.log('existing commitment');
+
                         return response.status(400).json("Cannot add a goal for an existing commitment.")
                     }
                 }
@@ -32,11 +30,10 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
             treehouse.getUser(request.body.username)
                 .then(createCommitmentForTreehouseUser(request))
                 .then(function resolveResults(results) {
-                    console.log('current points');
+
                     response.json(results);
                 })
                 .catch(function(error) {
-                    console.log('errored points');
                     response.status(500).send(error);
                 });
         });
@@ -81,6 +78,7 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
 
 function createCommitmentForTreehouseUser(request) {
     return function(teamTreehouseUser) {
+
         // Create timestamp; use 168 hours to account for daylight savings
         var now = moment();
         var oneWeekLater = moment().add(168, 'hours');
