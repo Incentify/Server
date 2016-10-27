@@ -23,10 +23,10 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(reque
                   username: u.commitments[0].username,
 
                   goal_amount: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].goal_amount,
-                  starting_points: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].starting_point,
+                  starting_points: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].starting_points,
                   value: u.commitments[0].point_history[u.commitments[0].point_history.length -1].value,
                   start: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].start_date,
-                  end: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].start_date
+                  end: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].end_date
                 })
               }
 
