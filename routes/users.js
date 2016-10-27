@@ -28,7 +28,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(reque
                   starting_points: u.commitments[0].goal_history[0].starting_points,
                   value: u.commitments[0].point_history[0].value,
                   start: u.commitments[0].goal_history[0].start_date,
-                  end: u.commitments[0].goal_history[0].end_date,
+                  end: u.commitments[0].goal_history[0].start_date,
                 })
               }
 
