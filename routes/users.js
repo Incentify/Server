@@ -74,14 +74,19 @@ router.put('/update', passport.authenticate('jwt', { session: false }), function
       });
       if(user.commitments.length > 0 && userHasTeamTreehouseCommitment) {
         treehouse.getUser(user.commitments[0].username).then(function(points) {
-          console.log("milestone 5");
           //append those points
           var now = moment().format();
+
           var pointUpdate = {
             timestamp: now,
             value: points.points.total
           }
-          rdb.appendPoints('users', user.id, pointUpdate);
+
+          // rdb.appendPoints('users', user.id, pointUpdate).then(function (argument) {
+          //   response.status(200);
+          // });
+          rdb.appendPoints('users', user.id, pointUpdate)
+          console.log("appended to db");
         })
       }
     });

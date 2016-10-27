@@ -97,7 +97,7 @@ function createCommitmentForTreehouseUser(request) {
                 end_date: oneWeekLater.toDate(),
                 starting_points: teamTreehouseUser.points.total,
                 goal_amount: parseInt(request.body.pointGoal),
-                penalty: request.body.amount * 100,
+                penalty: request.body.amount,
                 renewable: true
             }]
         };
