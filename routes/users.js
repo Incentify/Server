@@ -21,9 +21,9 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(reque
             if (u.commitments && u.commitments.length > 0) {
                 base = _.merge(base, {
                   username: u.commitments[0].username,
-                  goal_amount: u.commitments[0].goal_history[0].goal_amount,
-                  starting_points: u.commitments[0].goal_history[0].starting_point,
-                  value: u.commitments[0].point_history[0].value
+                  goal_amount: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].goal_amount,
+                  starting_points: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].starting_point,
+                  value: u.commitments[0].point_history[u.commitments[0].point_history.length -1].value
                 })
               }
 
