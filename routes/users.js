@@ -18,11 +18,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(reque
                 id: u.id
               };
 
+              // should modify array prototype to have a .last method to avoid `u.commitments[0].goal_history.length -1` indexes
             if (u.commitments && u.commitments.length > 0) {
                 base = _.merge(base, {
                   username: u.commitments[0].username,
                   goal_amount: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].goal_amount,
-                  starting_points: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].starting_point,
+                  starting_points: u.commitments[0].goal_history[u.commitments[0].goal_history.length -1].starting_points,
                   value: u.commitments[0].point_history[u.commitments[0].point_history.length -1].value
                 })
               }
@@ -86,7 +87,6 @@ router.put('/update', passport.authenticate('jwt', { session: false }), function
           //   response.status(200);
           // });
           rdb.appendPoints('users', user.id, pointUpdate)
-          console.log("appended to db");
         })
       }
     });

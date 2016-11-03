@@ -5,7 +5,7 @@ var passport = require ('passport');
 
 var router = express.Router();
 
-// router.get('/', auth.authorize, function (request, response) {
+// only need user to be able to GET/read available integrations
 router.get('/', function (request, response) {
     rdb.findAll('integrations')
     .then(function (integrations) {
@@ -13,7 +13,6 @@ router.get('/', function (request, response) {
     });
 });
 
-// router.get('/:id', auth.authorize, function (request, response, next) {
 // router.get('/:id', function (request, response, next) {
 //     rdb.find('users', request.params.id)
 //     .then(function (user) {

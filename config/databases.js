@@ -1,5 +1,5 @@
 require('dotenv').load();
-
+// gotta keep those db credentials secret
 module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,

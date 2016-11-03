@@ -30,7 +30,6 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
             treehouse.getUser(request.body.username)
                 .then(createCommitmentForTreehouseUser(request))
                 .then(function resolveResults(results) {
-
                     response.json(results);
                 })
                 .catch(function(error) {
@@ -39,6 +38,7 @@ router.post('/treehouse', passport.authenticate('jwt', { session: false }), func
         });
 });
 
+// DUOLINGO NOT READY FOR DEMO
 // user adds new DUOLINGO commitment
 // router.put('/duolingo', passport.authenticate('jwt', { session: false }), function(request, response) {
 //     rdb.find('users', request.user.id)
